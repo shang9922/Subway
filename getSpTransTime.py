@@ -10,13 +10,21 @@ def getRusultDf(dataf, station_id, dateandtime):
     lie  = station_id
     X = np.zeros([hang, lie], dtype = np.int)
     cols = ['in_station']
+    total = hang * (lie - 1)
+    p = 0
     for h in range(hang):
-        X[h, 0] = station_id + h
+        in_id = station_id + h
+        X[h, 0] = in_id
         for l in range(lie-1):
             out_id = station_id - l
-            if (station_id + h) != (out_id):
-                X[h, l+1] = getAvgTime(station_id, out_id, dateandtime, dataf)
-            cols.append(out_id)
+            if (in_id) != (out_id):
+                X[h, l+1] = getAvgTime(in_id, out_id, dateandtime, dataf)
+            p+=1
+            process = float(p * 100) / total
+            print 'process : %.2f %%' % process
+    for c in range(lie-1):
+        out_id = station_id - c
+        cols.append(out_id)
     X = pd.DataFrame(X)
     X.columns = cols
     return X
@@ -73,3 +81,4 @@ dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '2
 station_id = 14
 resultDF = getRusultDf(df, station_id, dt)
 print resultDF
+resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\shorTravelTime_for14_line1_20141201-07.csv')

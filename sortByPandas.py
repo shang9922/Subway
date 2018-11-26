@@ -11,10 +11,11 @@ import pandas as pd
     截取指定时间段的数据
     按卡ID排序，再按时间排序
     为下一步生成乘车事务准备
+    本步骤中没有进行线路的筛选
 '''
 
 readFile = open("D:\SubwayData\sj201412.txt", 'r')
-writeFile = open("D:\SubwayData\sj201412_without_01_07.txt","w")            #打开方式为wb，否则会出现间隔空行的情
+#writeFile = open("D:\SubwayData\sj201412_without_01_07.txt","w")            #打开方式为wb，否则会出现间隔空行的情
 
 i = 0                                             # 计数标志
 ids = []
@@ -23,8 +24,8 @@ lineIds = []
 stations = []
 inOrOut = []
 
-startTime = datetime.datetime.strptime('20141201' + '060000', '%Y%m%d%H%M%S')    # 截取开始时间
-endTime = datetime.datetime.strptime('20141207' + '235959', '%Y%m%d%H%M%S')      # 截取结束时间
+startTime = datetime.datetime.strptime('20141208' + '063000', '%Y%m%d%H%M%S')    # 截取开始时间
+endTime = datetime.datetime.strptime('20141214' + '235959', '%Y%m%d%H%M%S')      # 截取结束时间
 
 for line in readFile:
     #line = '"1111111111111111"\t"20140103"\t"23642"\t"214"\t"88"\t"22"\t"\n"'      # 原始数据格式
@@ -33,7 +34,7 @@ for line in readFile:
     line = line.split('\t')                       # 分割字符串
     line[2] = '%06d' %(string.atoi(line[2]))     # 时间靠右对齐，前方补0，以便转换为时间戳
     dateAndTime = datetime.datetime.strptime(line[1] + line[2], '%Y%m%d%H%M%S')     # 字符串转为时间戳
-    openTime = datetime.datetime.strptime(line[1] + '060000', '%Y%m%d%H%M%S')      # 地铁开始运营的时间
+    openTime = datetime.datetime.strptime(line[1] + '063000', '%Y%m%d%H%M%S')      # 地铁开始运营的时间
 
     if dateAndTime >= openTime:
         if dateAndTime >= startTime and dateAndTime <= endTime:      # 刷卡时间无异常
@@ -48,11 +49,11 @@ for line in readFile:
             lineIds.append(lineID)
             stations.append(stationID % 100)
             inOrOut.append(string.atoi(line[4]))
-        else:
-            print originalLine
-            writeFile.write(originalLine)
+        #else:
+            #print originalLine
+            #writeFile.write(originalLine)
 
-writeFile.close()
+#writeFile.close()
 readFile.close()
 
 df = pd.DataFrame({'id':ids,
@@ -62,5 +63,5 @@ df = pd.DataFrame({'id':ids,
                    'inOrOut':inOrOut}, columns = ['id','time','lineId','station','inOrOut'])                             # 利用Pandas进行排序等处理
 df.sort_values(['id','time'], ascending = True, inplace = True)
 print df.head(100)
-df.to_csv('D:\SubwayData\sj201412_01_07.csv')
+df.to_csv('D:\SubwayData\sj201412_08_14.csv')
 #print df

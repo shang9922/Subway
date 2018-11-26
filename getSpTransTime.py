@@ -35,6 +35,8 @@ def getAvgTime(in_id, out_id, dateandtime, dataf):
         temp = dfSelect(in_id, out_id, x, dataf)
         if temp != -1:
            times.append(temp)
+    if (in_id == 15) & (out_id == 10):
+        print times
     if times:
         return np.mean(times)
     else:
@@ -64,21 +66,25 @@ def getShortTime(x):
     n_clusters_ = len(set(y_pred))
     mins = []
 
+    if n_clusters_ <= 5:  #小于10个聚类，说明数据不足，放弃该站对应数据
+        return  -1
+
     for i in range(n_clusters_ - 1):  # 排除分类标签-1的数据，所以实际分类数量要-1
         tra_time = X[X.C == i].loc[:, 1]
-        mins.append(tra_time.min(0))
+        mins.append(min(tra_time))
     if mins:
-        return min(mins)
+        return np.mean(mins)
     else:
         return -1
 
 
 print 'Start reading data...'
-df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\Transactions_201412_01_07_line_1_1276913.csv", usecols=[3, 4, 5, 7])
+df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_01_07_line_1_1276913.csv", usecols=[3, 4, 5, 7])
 print 'Data has been read yet.'
 
-dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207']
+#dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207']
+dt = ['20141205']
 station_id = 14
 resultDF = getRusultDf(df, station_id, dt)
 print resultDF
-resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\shorTravelTime_for14_line1_20141201-07.csv')
+#resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\shorTravelTime_for14_line1_20141201-07-2.csv')

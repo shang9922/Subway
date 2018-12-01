@@ -8,9 +8,9 @@ df = pd.read_csv("D:\SubwayData\Transactions_201412_01_07_line_1_1276913.csv",us
 print 'Data has been read yet.'
 
 star_time = datetime.datetime.strptime('20141201' + '063000', '%Y%m%d%H%M%S')
-end_time = datetime.datetime.strptime('20141201' + '235900', '%Y%m%d%H%M%S')
+end_time = datetime.datetime.strptime('20141201' + '230000', '%Y%m%d%H%M%S')
 
-df = df[(pd.to_datetime(df.in_time)>=star_time)&(pd.to_datetime(df.in_time)<=end_time)&(df.in_station==14)&(df.out_station==4)&(df.total_time<3000)&(df.total_time>1300)].loc[:,['in_time','total_time']]
+df = df[(pd.to_datetime(df.in_time)>=star_time)&(pd.to_datetime(df.in_time)<=end_time)&(df.in_station==14)&(df.out_station==23)&(df.total_time<2300)&(df.total_time>1300)].loc[:,['in_time','total_time']]
 
 #datetime.datetime.strptime('2014-12-01 08:30:24', '%Y-%m-%d %H:%M:%S').time()
 x = []

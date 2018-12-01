@@ -9,7 +9,7 @@ from sklearn.cluster import DBSCAN
 '''
 
 def getClusterRusult(dataf, station_id, dateandtime):
-    df = pd.DataFrame(columns=["in _id", "out_id", "in_time", "in_seconds", "total_time", "C"])
+    df = pd.DataFrame(columns=["in_id", "out_id", "in_time", "in_seconds", "total_time", "C"])
     hang = 23 - station_id + 1
     lie  = station_id - 1
     total = hang * lie

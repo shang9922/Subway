@@ -62,15 +62,16 @@ def dfSelect(in_id, out_id, dateandtime, dataf):
 station_id = 14
 dwell = 25.0
 print 'Start reading data...'
-df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\clusteResult_for"+ str(station_id) +"_line1_20141201-07.csv")
+df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\clusteResult\clusteResult_for"+ str(station_id) +"_line1_20141201-07.csv")
 print 'Data has been read yet.'
 #dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207']
 #dt = ['20141201', '20141202', '20141203', '20141204', '20141205']
 #dt = ['20141206', '20141207']
-dt = ['20141201', '20141202', '20141203', '20141204']
+#dt = ['20141201', '20141202', '20141203', '20141204']
+dt = ['20141205']
 resultDF = getRusultDf(df, station_id, dt)
 print resultDF
-resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\data\shortTravelTime_for14_line1_20141201-04.csv')
+resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\data\shortTravelTime\shortTravelTime_for14_line1_20141205.csv')
 temps = []
 for i in range(1, station_id):
     x = resultDF.iloc[0, i]

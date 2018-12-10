@@ -3,13 +3,13 @@ import datetime
 import pandas as pd
 
 last_card_id = 0
-last_time = datetime.datetime.strptime('20141208' + '000000', '%Y%m%d%H%M%S')
+last_time = datetime.datetime.strptime('20141222' + '000000', '%Y%m%d%H%M%S')
 last_line_id = 0
 last_station_id = 0
 last_sign = 0
 
 this_card_id = 0
-this_time = datetime.datetime.strptime('20141208' + '000000', '%Y%m%d%H%M%S')
+this_time = datetime.datetime.strptime('20141222' + '000000', '%Y%m%d%H%M%S')
 this_line_id = 0
 this_station_id = 0
 this_sign = 0
@@ -26,7 +26,7 @@ last_exist = False
 i = 0
 
 print 'Start reading data...'
-df = pd.read_csv("D:\SubwayData\sj201412_08_14.csv",usecols=[1,2,3,4,5])
+df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\sj201412_22_31.csv",usecols=[1,2,3,4,5])
 print 'Data has been read yet.'
 length = df.shape[0]
 
@@ -71,4 +71,4 @@ write_file = pd.DataFrame({'id': ids,
                            'total_time': total_time}, columns=['id', 'line_id', 'in_station', 'out_station', 'in_time', 'out_time', 'total_time'])
 print write_file.head(20)
 print 'Start to write data...'
-write_file.to_csv('D:\SubwayData\Transactions_201412_08_14_line_1.csv')
+write_file.to_csv('E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_22_31_line_1.csv')

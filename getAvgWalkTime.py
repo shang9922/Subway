@@ -4,6 +4,7 @@ import numpy as np
 import datetime
 '''
     找到与某站点相关的最短事务，并计算平均步行时间
+    每天的步行时间最好分开算
 '''
 def getRusultDf(dataf, station_id, dateandtime):
     hang = 23 - station_id + 1
@@ -62,16 +63,16 @@ def dfSelect(in_id, out_id, dateandtime, dataf):
 station_id = 14
 dwell = 25.0
 print 'Start reading data...'
-df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\clusteResult\clusteResult_for"+ str(station_id) +"_line1_20141201-07.csv")
+df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\clusteResult\clusteResult_for"+ str(station_id) +"_line1_20141222-31.csv")
 print 'Data has been read yet.'
-#dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207']
+#dt = ['20141222', '20141223', '20141224', '20141225', '20141226']
 #dt = ['20141201', '20141202', '20141203', '20141204', '20141205']
 #dt = ['20141206', '20141207']
 #dt = ['20141201', '20141202', '20141203', '20141204']
-dt = ['20141205']
+dt = ['20141229', '20141230', '20141231']
 resultDF = getRusultDf(df, station_id, dt)
 print resultDF
-resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\data\shortTravelTime\shortTravelTime_for14_line1_20141205.csv')
+#resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\data\shortTravelTime\shortTravelTime_for14_line1_20141231.csv')
 temps = []
 for i in range(1, station_id):
     x = resultDF.iloc[0, i]

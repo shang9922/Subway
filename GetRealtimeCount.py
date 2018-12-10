@@ -6,15 +6,16 @@ import matplotlib.pyplot as plt
 '''
     初步得到时刻表，和粗略的leav_seconds
 '''
-star_time = datetime.datetime.strptime('20141201' + '063000', '%Y%m%d%H%M%S')
-end_time = datetime.datetime.strptime('20141201' + '233000', '%Y%m%d%H%M%S')
-walk_time = 29
+date_str = '20141205'
+star_time = datetime.datetime.strptime(date_str + '063000', '%Y%m%d%H%M%S')
+end_time = datetime.datetime.strptime(date_str + '233000', '%Y%m%d%H%M%S')
+walk_time = 51.23
 
 print 'Start reading data...'
 df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_01_07_line_1_1276913.csv", usecols=[3, 4, 5, 7])
 
-st = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\shortTravelTime\shortTravelTime_for14_line1_20141201.csv')
-ttr = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_for14_line1_20141201.csv', usecols=[1])
+st = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\shortTravelTime\shortTravelTime_for14_line1_' + date_str + '.csv')
+ttr = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_for14_line1_' + date_str +'.csv', usecols=[1])
 print 'Data has been read yet.'
 
 df = df[(pd.to_datetime(df.in_time) >= star_time) & (pd.to_datetime(df.in_time) <= end_time) & (df.in_station == 14) & (df.out_station < 14)]
@@ -69,7 +70,22 @@ for i in range(df2.shape[0]):
     wait_seconds = leav_seconds - arr_seconds
     df2.iloc[i, 6] = leav_seconds
     df2.iloc[i, 7] = wait_seconds
-df2.to_csv('E:\Pycharm\PythonProjects\Subway\data\WaitTime\waitTime_for14_line1_20141201.csv')
+df2.to_csv('E:\Pycharm\PythonProjects\Subway\data\WaitTime\waitTime_for14_line1_' + date_str + '.csv')
+
+
+
+'''
+    绘图，横轴arr_seconds，纵轴wait_seconds
+    只筛选了用于作图的点，实际数据未做筛选
+'''
+'''
+temp = df2[(df2.in_seconds > 0) & (df2.in_seconds < 9000) & (df2.wait_seconds < 600)]
+x = temp['arr_seconds']
+#x = []
+#for i in temp['in_time']:
+#    x.append(datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S').time())
+plt.scatter(x, temp['wait_seconds'], color='k', s=10, marker='.')
+plt.show()'''
 
 '''统计实时站台人数'''
 '''
@@ -80,21 +96,9 @@ for i in range(1, 601):
     x.append(check_seconds)
     count = df2[(df2.arr_seconds <= check_seconds) & (df2.leav_seconds > check_seconds)].shape[0]
     #count = df2[(df2.in_seconds > (check_seconds - 180)) & (df2.in_seconds <= check_seconds)].shape[0]
-    y.append(count)
+    y.append(count)'''
 #plt.plot(x, y)
 #plt.show()
-'''
-
-'''绘图，横轴arr_seconds，纵轴wait_seconds'''
-'''
-temp = df2[(df2.in_seconds > 0) & (df2.in_seconds < 9000) & (df2.wait_seconds < 600)]
-x = temp['in_seconds'] + walk_time
-#x = []
-#for i in temp['in_time']:
-#    x.append(datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S').time())
-plt.scatter(x, temp['wait_seconds'], color='k', s=10, marker='.')
-plt.show()
-'''
 
 '''在实时人数序列中找极大值点'''
 '''
@@ -113,13 +117,13 @@ for i in range(t, len(x)-u):
     if y[i] >= max(before) and y[i] > max(after):
         x2.append(x[i])
         y2.append(y[i])
-'''
-#rs = pd.DataFrame({'check_seconds': x2}, columns=['check_seconds'])
-#rs.to_csv('E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_temp_for14_line1_20141205.csv')
 
-#plt.scatter(x2, y2, color='k', marker='o')
-#plt.plot(x, y)
-#plt.show()
+rs = pd.DataFrame({'check_seconds': x2}, columns=['check_seconds'])
+#rs.to_csv('E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_temp_for14_line1_' + date_str + '.csv')
+
+plt.scatter(x2, y2, color='k', marker='o')
+plt.plot(x, y)
+plt.show()'''
 #df3 = pd.DataFrame({'check_seconds': x,
 #                    'count_in_platform': y
 #                       }, columns=['check_seconds', 'count_in_platform'])

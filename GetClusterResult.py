@@ -87,12 +87,12 @@ def clusterByDay(in_id, out_id, dateandtime, dataf):
     return rs
 
 print 'Start reading data...'
-df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_01_07_line_1_1276913.csv", usecols=[3, 4, 5, 7])
+df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_22_31_line_1.csv", usecols=[3, 4, 5, 7])
 print 'Data has been read yet.'
 
-dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207']
+dt = ['20141222', '20141223', '20141224', '20141225', '20141226', '20141227', '20141228', '20141229', '20141230', '20141231']
 #dt = ['20141205']
 station_id = 14
 resultDF = getClusterRusult(df, station_id, dt)
 print resultDF
-resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\data\clusteResult_for14_line1_20141201-07.csv')
+resultDF.to_csv('E:\Pycharm\PythonProjects\Subway\data\clusteResult\clusteResult_for14_line1_20141222-31.csv')

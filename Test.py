@@ -4,23 +4,37 @@ import numpy as np
 import datetime
 import matplotlib.pyplot as plt
 
-star_time = datetime.datetime.strptime('20141201' + '073000', '%Y%m%d%H%M%S')
-end_time = datetime.datetime.strptime('20141201' + '090000', '%Y%m%d%H%M%S')
-walk_time = 29
+#star_time = datetime.datetime.strptime('20141202' + '073000', '%Y%m%d%H%M%S')
+#end_time = datetime.datetime.strptime('20141202' + '090000', '%Y%m%d%H%M%S')
+
 
 print 'Start reading data...'
-df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_01_07_line_1_1276913.csv",usecols=[3,4,5,6,7])
+df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141201.csv")
+df2 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141202.csv")
+df3 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141203.csv")
+df4 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141204.csv")
+df5 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141205.csv")
 print 'Data has been read yet.'
 
-df = df[(pd.to_datetime(df.in_time) >= star_time) & (pd.to_datetime(df.in_time) <= end_time) & (df.in_station ==23) & (df.out_station==14 )]
 x = []
 y = []
-for i in df['in_time']:
-    x.append((datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S') - star_time).seconds)
-for i in df['out_time']:
-    x.append((datetime.datetime.strptime(i, '%Y-%m-%d %H:%M:%S') - star_time).seconds)
-x = df.out_time
-y = df.in_time
 
-plt.scatter(x, y, marker='.')
+x = df.train_num
+y1 = df.left_num/df.total_num
+y2 = df2.board_num/df2.total_num
+y3 = df3.board_num/df3.total_num
+y4 = df4.left_num/df4.total_num
+y5 = df5.left_num/df5.arr_num
+
+#y2 = df.left_num
+#y3 = df.arr_num/df.duration
+#y3 = df.arr_num
+#print np.mean(df.arr_num)
+
+plt.plot(x, y1, c = 'b', label = '1')
+#plt.plot(x, y2, c = 'r', label = '2')
+#plt.plot(x, y3, c = 'g', label = '3')
+plt.plot(x, y4, c = 'c', label = '4')
+#plt.plot(x, y5, c = 'k', label = '5')
+plt.legend()
 plt.show()

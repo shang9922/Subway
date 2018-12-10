@@ -24,8 +24,8 @@ lineIds = []
 stations = []
 inOrOut = []
 
-startTime = datetime.datetime.strptime('20141208' + '063000', '%Y%m%d%H%M%S')    # 截取开始时间
-endTime = datetime.datetime.strptime('20141214' + '235959', '%Y%m%d%H%M%S')      # 截取结束时间
+startTime = datetime.datetime.strptime('20141222' + '063000', '%Y%m%d%H%M%S')    # 截取开始时间
+endTime = datetime.datetime.strptime('20141231' + '235959', '%Y%m%d%H%M%S')      # 截取结束时间
 
 for line in readFile:
     #line = '"1111111111111111"\t"20140103"\t"23642"\t"214"\t"88"\t"22"\t"\n"'      # 原始数据格式
@@ -63,5 +63,5 @@ df = pd.DataFrame({'id':ids,
                    'inOrOut':inOrOut}, columns = ['id','time','lineId','station','inOrOut'])                             # 利用Pandas进行排序等处理
 df.sort_values(['id','time'], ascending = True, inplace = True)
 print df.head(100)
-df.to_csv('D:\SubwayData\sj201412_08_14.csv')
+df.to_csv('E:\Pycharm\PythonProjects\Subway\data\sj201412_22_31.csv')
 #print df

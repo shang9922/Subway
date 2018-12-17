@@ -1,40 +1,31 @@
-#coding:utf-8
+# coding:utf-8
 import pandas as pd
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
 
-#star_time = datetime.datetime.strptime('20141202' + '073000', '%Y%m%d%H%M%S')
-#end_time = datetime.datetime.strptime('20141202' + '090000', '%Y%m%d%H%M%S')
+dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
+    , '20141208', '20141209', '20141210', '20141211', '20141212'
+    , '20141215', '20141216', '20141217', '20141218', '20141219'
+    , '20141223', '20141225', '20141226']
 
-
-print 'Start reading data...'
-df = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141201.csv")
-df2 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141202.csv")
-df3 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141203.csv")
-df4 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141204.csv")
-df5 = pd.read_csv("E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141205.csv")
-print 'Data has been read yet.'
-
-x = []
-y = []
-
-x = df.train_num
-y1 = df.left_num/df.total_num
-y2 = df2.board_num/df2.total_num
-y3 = df3.board_num/df3.total_num
-y4 = df4.left_num/df4.total_num
-y5 = df5.left_num/df5.arr_num
-
-#y2 = df.left_num
-#y3 = df.arr_num/df.duration
-#y3 = df.arr_num
-#print np.mean(df.arr_num)
-
-plt.plot(x, y1, c = 'b', label = '1')
-#plt.plot(x, y2, c = 'r', label = '2')
-#plt.plot(x, y3, c = 'g', label = '3')
-plt.plot(x, y4, c = 'c', label = '4')
-#plt.plot(x, y5, c = 'k', label = '5')
-plt.legend()
+train_df = pd.DataFrame(columns=['train_num', 'check_seconds', 'duration'])
+print('Combining data ...')
+j = 1
+for date_str in dts:
+    temp_df = pd.read_csv(
+        'E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_for14_line1_' + date_str + '.csv')
+    duration = []
+    for i in range(temp_df.shape[0]):
+        temp_df.iloc[i, 0] = i + 1 + j*0.025
+        if i<1:
+            duration.append(0)
+        else:
+            duration.append(temp_df.iloc[i, 1] - temp_df.iloc[i-1, 1])
+    temp_df['duration'] = duration
+    temp_df.columns = ['train_num', 'check_seconds', 'duration']
+    train_df = train_df.append(temp_df, ignore_index=True)
+    j = j+1
+# plt.scatter(train_df[train_df.train_num<=20].train_num, train_df[train_df.train_num<=20].duration, marker='.', color='k', s=10)
+plt.scatter(train_df[train_df.train_num <= 10].train_num, train_df[train_df.train_num <= 10].check_seconds, marker='.', color='k', s=10)
 plt.show()

@@ -29,7 +29,7 @@ def arimaMainProcess(train_dt, predict_len, test_str):
     #print testStationarity(ts)
 
 
-    decomposition = seasonal_decompose(ts, freq=predict_len, two_sided=False)
+    decomposition = seasonal_decompose(ts, freq=predict_len, two_sided=False, model='additive')
     trend = decomposition.trend
     seasonal = decomposition.seasonal
     residual = decomposition.resid

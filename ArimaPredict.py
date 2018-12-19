@@ -54,12 +54,13 @@ def arimaMainProcess(train_dt, predict_len, test_str):
         pre_rs.append(trend_rs[i]+seasonal_part)
 
     pre_rs = [round(i) for i in pre_rs]
-    test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_' + test_str + '.csv')
-    plt.plot(test_df.check_seconds, pre_rs, c='r', label='arima')
-    plt.plot(test_df.check_seconds, test_df.flow, c='b', label='real data')
-    plt.show()
-    print mean_absolute_error(pre_rs, test_df.flow)
-    print mean_squared_error(pre_rs, test_df.flow)
+    # test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_' + test_str + '.csv')
+    # plt.plot(test_df.check_seconds, pre_rs, c='r', label='arima')
+    # plt.plot(test_df.check_seconds, test_df.flow, c='b', label='real data')
+    # plt.show()
+    # print mean_absolute_error(pre_rs, test_df.flow)
+    # print mean_squared_error(pre_rs, test_df.flow)
+    return pre_rs
 
 
     # differenced = difference(ts, 204)
@@ -123,12 +124,12 @@ def testStationarity(ts):
         dfoutput['Critical Value (%s)' % key] = value
     return dfoutput
 
-dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
-    , '20141208', '20141209', '20141210', '20141211', '20141212'
-    , '20141215', '20141216', '20141217', '20141218', '20141219'
-    , '20141223', '20141225', '20141226']
+# dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
+#     , '20141208', '20141209', '20141210', '20141211', '20141212'
+#     , '20141215', '20141216', '20141217', '20141218', '20141219'
+#     , '20141223', '20141225', '20141226']
 # dts = ['20141201', '20141202', '20141203', '20141204', '20141205']
-arimaMainProcess(dts, 204, '20141229')
+# arimaMainProcess(dts, 204, '20141229')
 
 # df2 = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\WaitTime\waitTime_for14_line1_20141203.csv')
 # x = []

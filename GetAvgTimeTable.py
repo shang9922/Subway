@@ -10,9 +10,9 @@ def mainProcess(dts, total_train = 204):
     print('Combining data ...')
     for date_str in dts:                    # 拼接不同天的时刻表数据
         temp_df = pd.read_csv(
-            'E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_for14_line1_' + date_str + '.csv')
+            'E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_' + date_str + '.csv').loc[:, ['train_num', 'leav_time']]
         for i in range(temp_df.shape[0]):
-            temp_df.iloc[i, 0] = i + 1
+            temp_df.iloc[i, 1] *= 15  # 还原成秒数
         temp_df.columns = ['train_num', 'check_seconds']
         train_df = train_df.append(temp_df, ignore_index=True)
 
@@ -33,9 +33,12 @@ def mainProcess(dts, total_train = 204):
     rs_df = pd.DataFrame({'train_num': num,
                             'check_seconds': avg_seconds},
                            columns=['train_num', 'check_seconds'])
-    rs_df.to_csv('E:\Pycharm\PythonProjects\Subway\data\TimeTable\Avg_Time_Table.csv')
+    rs_df.to_csv('E:\Pycharm\PythonProjects\Subway\data\TrainData\Avg_Time_Table.csv')
 
-    test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\TimeTable\TimeTable_for14_line1_20141229.csv')
+    test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_20141229.csv').loc[:, ['train_num', 'leav_time']]
+    for i in range(test_df.shape[0]):
+        test_df.iloc[i, 1] *= 15  # 还原成秒数
+    test_df.columns = ['train_num', 'check_seconds']
     print mean_squared_error(test_df.check_seconds, rs_df.check_seconds)
     print mean_absolute_error(test_df.check_seconds, rs_df.check_seconds)
     # plt.plot(rs_df.loc[0:9].train_num, rs_df.loc[0:9].check_seconds, c='r', label='avg')

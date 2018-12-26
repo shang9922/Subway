@@ -100,7 +100,7 @@ def get_HA_mean_squared_error(dts):
 
 
 # 固定权重下的预测
-def predict_by_constant_weights(dts, test_str):
+def predict_by_constant_weights(dts, test_str, steps=3):
     ha_seconds = list(pd.read_csv( 'E:\Pycharm\PythonProjects\Subway\data\TrainData\Avg_Time_Table.csv').iloc[:, 2])
     test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_' + test_str + '.csv')
     test_seconds = list(test_df.leav_time * 15)
@@ -115,9 +115,9 @@ def predict_by_constant_weights(dts, test_str):
     train_index = -3
     predic_now = 4
     predic_rs = []
-    while predic_now <= 203:
+    while predic_now <= test_df.shape[0]-1:
         del predict_factor[:]  # 清空list
-        if predic_now - train_index > 6:    # 需要移动预测滑窗
+        if predic_now - train_index > 3 + steps:    # 需要移动预测滑窗
             train_index = predic_now - 4
         predict_factor.append(test_seconds[train_index] + avg_du_matric[train_index][predic_now - train_index - 1])
         predict_factor.append(test_seconds[train_index + 1] + avg_du_matric[train_index + 1][predic_now - train_index - 2])
@@ -230,8 +230,10 @@ def predict_by_dynamic_weights(dts, test_str):
     print mean_absolute_error(test_seconds[4:], predic_rs)
 
 
+
+# test_dt = '20141229'
 # dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
 #     , '20141208', '20141209', '20141210', '20141211', '20141212'
 #     , '20141215', '20141216', '20141217', '20141218', '20141219'
 #     , '20141223', '20141225', '20141226']
-# predict_by_constant_weights(dts, '20141229')
+# predict_by_constant_weights(dts, test_dt, 3)

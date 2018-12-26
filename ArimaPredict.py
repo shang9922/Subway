@@ -15,6 +15,9 @@ from sklearn.metrics import r2_score,mean_absolute_error,mean_squared_error
 def arimaMainProcess(train_dt, predict_len, test_str):
     train_df = pd.DataFrame(columns=['check_seconds', 'flow'])
     print('Combining data ...')
+    train_dt = ['20141201', '20141202', '20141203', '20141204', '20141205'
+        , '20141208', '20141209', '20141210', '20141211', '20141212'
+        , '20141215', '20141216', '20141217', '20141218', '20141219']
     for date_str in train_dt:
         temp_df = pd.read_csv(
             'E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_' + date_str + '.csv')
@@ -26,7 +29,7 @@ def arimaMainProcess(train_dt, predict_len, test_str):
     train_df.index = pd.to_datetime(train_df.index)
     train_df['flow'] = train_df['flow'].astype(float)
     ts = train_df['flow']
-    #print testStationarity(ts)
+    # print testStationarity(ts)
 
 
     decomposition = seasonal_decompose(ts, freq=predict_len, two_sided=False, model='additive')
@@ -34,14 +37,16 @@ def arimaMainProcess(train_dt, predict_len, test_str):
     seasonal = decomposition.seasonal
     residual = decomposition.resid
     residual.dropna(inplace=True)
-    #print testStationarity(residual)
-    #draw_acf_pacf(residual)
-    #decomposition.plot()
-    #plt.show()
+    # print testStationarity(residual)
+    # draw_acf_pacf(residual)
+    # decomposition.plot()
+    # plt.show()
     trend.dropna(inplace=True)
+    # print testStationarity(trend)
     # trend_anl = trend.diff().dropna()
-    # draw_acf_pacf(trend_anl)
-    trend_model = ARIMA(trend, order=(0, 1, 2))
+    # draw_acf_pacf(trend)
+    trend_model = ARIMA(trend, order=(4, 0, 0))
+    # trend_model = ARIMA(trend, order=(0, 1, 2))
     trend_arma = trend_model.fit(disp=0)
     trend_rs = trend_arma.forecast(predict_len)[0]
     pre_rs = []
@@ -57,7 +62,9 @@ def arimaMainProcess(train_dt, predict_len, test_str):
     # test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_' + test_str + '.csv')
     # plt.plot(test_df.check_seconds, pre_rs, c='r', label='arima')
     # plt.plot(test_df.check_seconds, test_df.flow, c='b', label='real data')
+    # plt.legend()
     # plt.show()
+    # print r2_score(test_df.flow, pre_rs)
     # print mean_absolute_error(pre_rs, test_df.flow)
     # print mean_squared_error(pre_rs, test_df.flow)
     return pre_rs
@@ -126,9 +133,8 @@ def testStationarity(ts):
 
 # dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
 #     , '20141208', '20141209', '20141210', '20141211', '20141212'
-#     , '20141215', '20141216', '20141217', '20141218', '20141219'
-#     , '20141223', '20141225', '20141226']
-# dts = ['20141201', '20141202', '20141203', '20141204', '20141205']
+#     , '20141215', '20141216', '20141217', '20141218', '20141219']
+# # dts = ['20141201', '20141202', '20141203', '20141204', '20141205']
 # arimaMainProcess(dts, 204, '20141229')
 
 # df2 = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\WaitTime\waitTime_for14_line1_20141203.csv')

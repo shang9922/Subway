@@ -65,15 +65,17 @@ def mianProcess(train_dt, test_dt):
     print('R-squared value of linear SVR is', linear_svr.score(X_test, Y_test))
     print('The mean squared error of linear SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
                                                                         ss_y.inverse_transform(linear_svr_Y_predict)))
+    print('The root mean squared error of linear SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
+                                                                        ss_y.inverse_transform(linear_svr_Y_predict))**0.5)
     print('The mean absolute error of linear SVR is', mean_absolute_error(ss_y.inverse_transform(Y_test),
                                                                           ss_y.inverse_transform(linear_svr_Y_predict)))
 
-    print(' ')
-    print('R-squared value of RBF SVR is', rbf_svr.score(X_test, Y_test))
-    print('The mean squared error of RBF SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
-                                                                     ss_y.inverse_transform(rbf_svr_Y_predict)))
-    print('The mean absolute error of RBF SVR is', mean_absolute_error(ss_y.inverse_transform(Y_test),
-                                                                       ss_y.inverse_transform(rbf_svr_Y_predict)))
+    # print(' ')
+    # print('R-squared value of RBF SVR is', rbf_svr.score(X_test, Y_test))
+    # print('The mean squared error of RBF SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
+    #                                                                  ss_y.inverse_transform(rbf_svr_Y_predict)))
+    # print('The mean absolute error of RBF SVR is', mean_absolute_error(ss_y.inverse_transform(Y_test),
+    #                                                                    ss_y.inverse_transform(rbf_svr_Y_predict)))
     Y_test = pd.DataFrame(ss_y.inverse_transform(Y_test))
     Y1 = pd.DataFrame(ss_y.inverse_transform(linear_svr_Y_predict))
     Y2 = pd.DataFrame(ss_y.inverse_transform(rbf_svr_Y_predict))
@@ -82,6 +84,7 @@ def mianProcess(train_dt, test_dt):
     plt.plot(x, Y_test, c='b', label='target')
     plt.plot(x, Y1, c='r', label='linear')
     plt.plot(x, Y2, c='c', label='rbf')
+    plt.legend()
     plt.show()
     return Y_test
 

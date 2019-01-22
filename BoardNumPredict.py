@@ -54,39 +54,37 @@ def mianProcess(train_dt, test_dt):
     Y_test = ss_y.transform(Y_test.reshape(-1, 1))
 
     print('Start SVR ...')
-    linear_svr = SVR(kernel='linear')  # 线性核函数初始化的SVR
+    linear_svr = SVR(kernel='linear', C=1000)  # 线性核函数初始化的SVR
     linear_svr.fit(X_train, Y_train)
     linear_svr_Y_predict = linear_svr.predict(X_test)
 
-    rbf_svr = SVR(kernel='rbf')  # 径向基核函数初始化的SVR
+    rbf_svr = SVR(kernel='rbf', C=1000)  # 径向基核函数初始化的SVR
     rbf_svr.fit(X_train, Y_train)
     rbf_svr_Y_predict = rbf_svr.predict(X_test)
 
     print('R-squared value of linear SVR is', linear_svr.score(X_test, Y_test))
     print('The mean squared error of linear SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
                                                                         ss_y.inverse_transform(linear_svr_Y_predict)))
-    print('The root mean squared error of linear SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
-                                                                        ss_y.inverse_transform(linear_svr_Y_predict))**0.5)
     print('The mean absolute error of linear SVR is', mean_absolute_error(ss_y.inverse_transform(Y_test),
                                                                           ss_y.inverse_transform(linear_svr_Y_predict)))
 
-    # print(' ')
-    # print('R-squared value of RBF SVR is', rbf_svr.score(X_test, Y_test))
-    # print('The mean squared error of RBF SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
-    #                                                                  ss_y.inverse_transform(rbf_svr_Y_predict)))
-    # print('The mean absolute error of RBF SVR is', mean_absolute_error(ss_y.inverse_transform(Y_test),
-    #                                                                    ss_y.inverse_transform(rbf_svr_Y_predict)))
-    Y_test = pd.DataFrame(ss_y.inverse_transform(Y_test))
-    Y1 = pd.DataFrame(ss_y.inverse_transform(linear_svr_Y_predict))
-    Y2 = pd.DataFrame(ss_y.inverse_transform(rbf_svr_Y_predict))
-    x = test_df.train_num
-    #x = test_df.leav_time
-    plt.plot(x, Y_test, c='b', label='target')
-    plt.plot(x, Y1, c='r', label='linear')
-    plt.plot(x, Y2, c='c', label='rbf')
-    plt.legend()
-    plt.show()
-    return Y_test
+    print(' ')
+    print('R-squared value of RBF SVR is', rbf_svr.score(X_test, Y_test))
+    print('The mean squared error of linear SVR is', mean_squared_error(ss_y.inverse_transform(Y_test),
+                                                                     ss_y.inverse_transform(rbf_svr_Y_predict)))
+    print('The mean absolute error of RBF SVR is', mean_absolute_error(ss_y.inverse_transform(Y_test),
+                                                                       ss_y.inverse_transform(rbf_svr_Y_predict)))
+    # Y_test = pd.DataFrame(ss_y.inverse_transform(Y_test))
+    # Y1 = pd.DataFrame(ss_y.inverse_transform(linear_svr_Y_predict))
+    # Y2 = pd.DataFrame(ss_y.inverse_transform(rbf_svr_Y_predict))
+    # x = test_df.train_num
+    # #x = test_df.leav_time
+    # plt.plot(x, Y_test, c='b', label='target')
+    # plt.plot(x, Y1, c='r', label='linear')
+    # plt.plot(x, Y2, c='c', label='rbf')
+    # plt.legend()
+    # plt.show()
+    # return Y_test
 
 
 train_dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207'

@@ -55,7 +55,7 @@ def decompose_flow(Arima_rs):
 
 
 # 历史平均预测
-def HA_predict(dts):
+def HA_predict():
     dts = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207'
         , '20141208', '20141209', '20141210', '20141211', '20141212', '20141213', '20141214'
         , '20141215', '20141216', '20141217', '20141218', '20141219', '20141220', '20141221'
@@ -134,7 +134,7 @@ def predict_Board_num(train_data, svr_model, X_test):
 
 
 # 基于真实时刻表预测
-def real_time_table_predict(dts, test_dt):
+def real_time_table_predict(dts, svr_dt, test_dt='20141229'):
     avg_time_table = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\TrainData\TrainData_for14_line1_'+ test_dt + '.csv').loc[:, 'leav_time']
     avg_time_table *= 15
     Arima_rs = AP.arimaMainProcess(dts, 204, test_dt)
@@ -197,7 +197,7 @@ def real_time_table_predict(dts, test_dt):
 
 '''每轮预测截止时间片为真实时刻表中对应最后一班车的发车时间片+1'''
 # 基于短时时刻表的预测
-def short_term_predict(dts, svr_dt, test_dt, steps = 3):
+def short_term_predict(dts, svr_dt, test_dt='20141229', steps = 3):
     # 预测时刻表的过程，步长并不是越短越好，时刻表预测步长固定为3
     predict_time_table = STP.predict_by_constant_weights(dts, test_dt, 3)  # 获得预测的时刻表，从第5班车开始，长度200
     Arima_rs = AP.arimaMainProcess(dts, 204, test_dt)
@@ -301,17 +301,17 @@ def short_term_predict(dts, svr_dt, test_dt, steps = 3):
         predict_rs.append(0)
     return predict_rs
 
-test_dt = '20141229'
-dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
-    , '20141208', '20141209', '20141210', '20141211', '20141212'
-    , '20141215', '20141216', '20141217', '20141218', '20141219'
-    , '20141223', '20141225', '20141226']
-svr_dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207'
-    , '20141208', '20141209', '20141210', '20141211', '20141212', '20141213', '20141214'
-    , '20141215', '20141216', '20141217', '20141218', '20141219', '20141220', '20141221'
-    , '20141223', '20141224', '20141225', '20141226', '20141227', '20141228']
-weekend_dts = ['20141206', '20141207', '20141213', '20141214', '20141220', '20141221'
-    , '20141227', '20141228']
+# test_dt = '20141229'
+# dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
+#     , '20141208', '20141209', '20141210', '20141211', '20141212'
+#     , '20141215', '20141216', '20141217', '20141218', '20141219'
+#     , '20141223', '20141225', '20141226']
+# svr_dt = ['20141201', '20141202', '20141203', '20141204', '20141205', '20141206', '20141207'
+#     , '20141208', '20141209', '20141210', '20141211', '20141212', '20141213', '20141214'
+#     , '20141215', '20141216', '20141217', '20141218', '20141219', '20141220', '20141221'
+#     , '20141223', '20141224', '20141225', '20141226', '20141227', '20141228']
+# weekend_dts = ['20141206', '20141207', '20141213', '20141214', '20141220', '20141221'
+#     , '20141227', '20141228']
 
 # Arima_rs = AP.arimaMainProcess(dts, 204, test_dt)
 # flow = decompose_flow(Arima_rs)
@@ -322,7 +322,7 @@ weekend_dts = ['20141206', '20141207', '20141213', '20141214', '20141220', '2014
 
 '''历史平均预测'''
 # test = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\PlatformCount\PlatformCount_for_' + test_dt + '.csv').loc[:, ['check_seconds', 'count']]
-# # ha = HA_predict(dts)
+# # ha = HA_predict(dts).loc[:, 'count']
 # ha = real_time_table_predict(dts, test_dt)
 # plt.plot(test.check_seconds[200:800], test['count'][200:800], c='b')
 # plt.plot(test.check_seconds[200:800], ha[200:800], c='r')

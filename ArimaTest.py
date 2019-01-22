@@ -30,25 +30,26 @@ def arimaMainProcess(train_dt, predict_len, test_str):
     train_df.index = pd.to_datetime(train_df.index)
     train_df['flow'] = train_df['flow'].astype(float)
     ts = train_df['flow']
-    # print testStationarity(ts)
 
     decomposition = seasonal_decompose(ts, freq=predict_len, two_sided=False, model='additive')
     trend = decomposition.trend
     seasonal = decomposition.seasonal
     residual = decomposition.resid
     # residual.dropna(inplace=True)
-    # print testStationarity(residual)
-    # draw_acf_pacf(residual)
     # decomposition.plot()
     # plt.show()
     trend.dropna(inplace=True)
     # print testStationarity(trend)
+    trend_anl = trend.diff(periods=1).dropna()
+    # trend_anl.plot()
+    # plt.show()
+    # print testStationarity(trend_anl)
     # trend_anl = trend.diff().dropna().diff().dropna()
     # draw_acf_pacf(trend_anl)
-    # draw_acf_pacf(trend)
+    # draw_acf_pacf(trend_anl)
+    # p_and_q(trend)
     # trend_model = ARIMA(trend, order=(4, 0, 0))
-    trend_model = ARIMA(trend, order=(1, 1, 2))
-    # trend_model = ARIMA(trend, order=(0, 2, 3))
+    trend_model = ARIMA(trend, order=(2, 1, 2))
     trend_arma = trend_model.fit(disp=0)
     trend_rs = trend_arma.forecast(predict_len)[0]
     pre_rs = []
@@ -61,45 +62,15 @@ def arimaMainProcess(train_dt, predict_len, test_str):
         pre_rs.append(trend_rs[i]+seasonal_part)
 
     pre_rs = [round(i) for i in pre_rs]
-    # test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_' + test_str + '.csv')
-    # plt.plot(test_df.check_seconds, pre_rs, c='r', label='arima')
-    # plt.plot(test_df.check_seconds, test_df.flow, c='b', label='real data')
-    # plt.legend()
-    # plt.show()
-    # print r2_score(test_df.flow, pre_rs)
-    # print mean_absolute_error(pre_rs, test_df.flow)
-    # print mean_squared_error(pre_rs, test_df.flow)
+    test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_' + test_str + '.csv')
+    plt.plot(test_df.check_seconds, pre_rs, c='r', label='arima')
+    plt.plot(test_df.check_seconds, test_df.flow, c='b', label='real data')
+    plt.legend()
+    plt.show()
+    print r2_score(test_df.flow, pre_rs)
+    print mean_absolute_error(pre_rs, test_df.flow)
+    print mean_squared_error(pre_rs, test_df.flow)
     return pre_rs
-
-
-    # differenced = difference(ts, 204)
-    #print differenced
-    #differenced = pd.Series(differenced).diff().dropna()
-    # print testStationarity(differenced)
-    # draw_acf_pacf(differenced)
-    # differenced = pd.Series(differenced).diff().dropna()
-    # print testStationarity(differenced)
-    # draw_acf_pacf(differenced)
-    # model = ARIMA(differenced, order=(1, 0, 1))
-    # result_arma = model.fit(disp=0)
-    # rs = result_arma.forecast(204)[0]
-    # print rs
-    # history = [x for x in ts]
-    # new_rs = []
-    # for yhat in rs:
-    #     inverted = inverse_difference(history, yhat, 204)
-    #     print('Flow : %f' % (inverted))
-    #     history.append(inverted)
-    #     new_rs.append(inverted)
-    # # print rs
-    # #print testStationarity(dif)
-    # test_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\InFlow\InFlow_for14_line1_20141225.csv')
-    # plt.plot(test_df.check_seconds, new_rs, c='r', label='arima')
-    # plt.plot(test_df.check_seconds, test_df.flow, c='b', label='real data')
-    # plt.show()
-    # print mean_absolute_error(new_rs, test_df.flow)
-    # print mean_squared_error(new_rs, test_df.flow)
-
 
 
 def difference(dataset, interval=1):
@@ -128,10 +99,53 @@ def draw_acf_pacf(ts, lags=31):
 def testStationarity(ts):
     dftest = adfuller(ts)
     # 对上述函数求得的值进行语义描述
-    dfoutput = pd.Series(dftest[0:4],index=['Test Statistic', 'p-value', '#Lags Used', 'Number of Observations Used'])
+    dfoutput = pd.Series(dftest[0:3], index=['Test Statistic', 'p-value', 'Lags Used'])
     for key, value in dftest[4].items():
         dfoutput['Critical Value (%s)' % key] = value
     return dfoutput
+
+def p_and_q(trend):
+    pmax = 6
+    qmax = 6
+    d=1
+    aic_matrix = []  # bic矩阵
+    bic_matrix = []  # bic矩阵
+    aic_lest = 0
+    bic_lest = 0
+    p_aic = 0
+    q_aic = 0
+    p_bic = 0
+    q_bic = 0
+    for p in range(pmax + 1):
+        aic_tmp = []
+        bic_tmp = []
+        for q in range(qmax + 1):
+            try:
+                a = ARIMA(trend, (p, d, q)).fit().aic
+                b = ARIMA(trend, (p, d, q)).fit().bic
+                if a<aic_lest:
+                    aic_lest = a
+                    p_aic = p
+                    q_aic = q
+                if b<bic_lest:
+                    bic_lest = b
+                    p_bic = p
+                    q_bic = q
+                aic_tmp.append(a)
+                bic_tmp.append(b)
+            except:
+                aic_tmp.append(0)
+                bic_tmp.append(0)
+        aic_matrix.append(aic_tmp)
+        bic_matrix.append(bic_tmp)
+    aic_df = pd.DataFrame(aic_matrix)
+    bic_df = pd.DataFrame(bic_matrix)
+    aic_df.to_csv('E:\Pycharm\PythonProjects\Subway\data\TrainData\Aic_matrix_26.csv')
+    bic_df.to_csv('E:\Pycharm\PythonProjects\Subway\data\TrainData\Bic_matrix_26.csv')
+    print 'aic: p = %d, q = %d', (p_aic, q_aic)
+    print 'bic: p = %d, q = %d', (p_bic, q_bic)
+    print 'finish'
+
 
 # dts = ['20141201', '20141202', '20141203', '20141204', '20141205'
 #     , '20141208', '20141209', '20141210', '20141211', '20141212'

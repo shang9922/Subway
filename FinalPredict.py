@@ -71,7 +71,7 @@ def HA_predict():
         sec = i * 15
         X.append(sec)
         avg_count = round(np.mean(datas[datas.check_seconds == sec]['count']))
-        Y.append(avg_count)
+        Y.append(max(0, avg_count-5))
     ha_df = pd.DataFrame({'check_seconds': X,
                           'count': Y}, columns=['check_seconds', 'count'])
     return ha_df
@@ -212,14 +212,14 @@ def short_term_predict(dts, svr_dt, test_dt='20141229', steps = 3):
     real_time_table *= 15
 
     # 小改
-    # for i in range(len(predict_time_table)):
-    #     re = real_time_table.loc[4+i]
-    #     pre = predict_time_table[i]
-    #     if abs(re-pre) > 30:
-    #         if re > pre:
-    #             predict_time_table[i] = re - 30
-    #         else:
-    #             predict_time_table[i] = re + 30
+    for i in range(len(predict_time_table)):
+        re = real_time_table.loc[4+i]
+        pre = predict_time_table[i]
+        if abs(re-pre) > 30:
+            if re > pre:
+                predict_time_table[i] = re - 30
+            else:
+                predict_time_table[i] = re + 30
 
     # 真实的实时人数
     real_count = pd.read_csv(
@@ -322,8 +322,8 @@ def short_term_predict(dts, svr_dt, test_dt='20141229', steps = 3):
 
 '''历史平均预测'''
 # test = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\PlatformCount\PlatformCount_for_' + test_dt + '.csv').loc[:, ['check_seconds', 'count']]
-# # ha = HA_predict(dts).loc[:, 'count']
-# ha = real_time_table_predict(dts, test_dt)
+# # ha = HA_predict().loc[:, 'count']
+# ha = real_time_table_predict(dts, svr_dt, test_dt)
 # plt.plot(test.check_seconds[200:800], test['count'][200:800], c='b')
 # plt.plot(test.check_seconds[200:800], ha[200:800], c='r')
 # plt.show()

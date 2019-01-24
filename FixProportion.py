@@ -53,7 +53,7 @@ def get_alight_proportion():
 # 获得对比算法的预测结果
 def get_fix_proportion_predict(test_dt='20141229'):
     C = 1880
-    alight_proportion = 0.05#get_alight_proportion()
+    alight_proportion = 0.006#get_alight_proportion()
     star_time = datetime.datetime.strptime(test_dt + '063000', '%Y%m%d%H%M%S')
     end_time = datetime.datetime.strptime(test_dt + '233000', '%Y%m%d%H%M%S')
     alight_df = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\Transactions_201412_22_31_line_1.csv')
@@ -100,8 +100,8 @@ if __name__ == '__main__':
     test = pd.read_csv('E:\Pycharm\PythonProjects\Subway\data\PlatformCount\PlatformCount_for_' + test_dt + '.csv').loc[
            :, ['check_seconds', 'count']]
     ha = get_fix_proportion_predict()
-    plt.plot(test.check_seconds[0:800], test['count'][0:800], c='b')
-    plt.plot(test.check_seconds[0:800], ha[0:800], c='r')
+    plt.plot(test.check_seconds[800:1600], test['count'][800:1600], c='b')
+    plt.plot(test.check_seconds[800:1600], ha[800:1600], c='r')
     plt.show()
     print r2_score(test['count'], ha)
     print mean_squared_error(test['count'], ha)
